@@ -10,9 +10,9 @@ double Line::getYFromX(double x)
 {
     rassert(b != 0.0, 2734832748932790061); // случай вертикальной прямой не рассматривается для простоты
 
-    // TODO 01
-    double y = 1.0;
-
+     TODO 01
+    double y = (a * x + c)/(-b);
+    double y = -(a * x + c)/(b);
     return y;
 }
 
@@ -99,7 +99,7 @@ void Line::plot(cv::Mat &img, double scale, cv::Scalar color)
     rassert(img.type() == CV_8UC3, 34237849200055);
 
     // TODO 03 реализуйте отрисовку прямой (воспользуйтесь getYFromX и cv::line(img, cv::Point(...), cv::Point(...), color)), будьте осторожны и не забудьте учесть scale!
-    // cv::line(img, cv::Point(...), cv::Point(...), color);
+     cv::line(img, cv::Point(0,getYFromX(0)*scale), cv::Point((img.cols-1)*scale,getYFromX(img.cols-1)*scale), color);
 }
 
 Line fitLineFromTwoPoints(cv::Point2f a, cv::Point2f b)
@@ -107,13 +107,48 @@ Line fitLineFromTwoPoints(cv::Point2f a, cv::Point2f b)
     rassert(a.x != b.x, 23892813901800104); // для упрощения можно считать что у нас не бывает вертикальной прямой
 
     // TODO 04 реализуйте построение прямой по двум точкам
-    return Line(0.0, -1.0, 2.0);
+    double m = -(b.y-a.y)/(b.x-a.x);
+    double n = -a.y-m*a.x;
+    return Line(m, 1.0, n);
+                      
 }
 
 Line fitLineFromNPoints(std::vector<cv::Point2f> points)
 {
     // TODO 05 реализуйте построение прямой по многим точкам (такое чтобы прямая как можно лучше учитывала все точки)
-    return Line(0.0, -1.0, 2.0);
+        double sumx1 = 0;
+    double sumx1 = 0;
+    double sumy1 = 0;
+    double avgx1 = 0;
+    double avgy1 = 0;
+    double sumx2 = 0;
+    double sumy2 = 0;
+    double avgx2 = 0;
+    double avgy2 = 0;
+    double m = 0;
+    double n = 0;
+    for (int i = 0; i < points.size(); ++i) {
+        if (points[i].y < 734/100){
+            sumx1 += points[i].x;
+            sumy1 += points[i].y;
+            m++;
+        } else{
+            sumx2 += points[i].x;
+            sumy2 += points[i].y;
+            n++;
+        }
+    }
+    avgx1 = sumx1/m;
+    avgy1 = sumy1/m;
+    avgx2 = sumx2/n;
+    avgy2 = sumy2/n;
+    double p = -(avgy1 - avgy2)/(avgx1 - avgx2);
+    double q = -avgy1 - a0 * avgx1;
+    return Line(p, 1.0, q);
+                                              }
+
+                                              Line fitLineFromNNoisyPoints(std::vector<cv::Point2f> points)
+                                              {
 }
 
 Line fitLineFromNNoisyPoints(std::vector<cv::Point2f> points)
