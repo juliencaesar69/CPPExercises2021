@@ -58,21 +58,42 @@ void run() {
     const int INF = std::numeric_limits<int>::max();
 
     std::vector<int> distances(nvertices, INF);
-    // TODO ...
+    distances[start] = 0;
+    std::vector<bool> used(nvertices, false);
+    std::vector<int> father(nvertices, -1);
 
-//    while (true) {
-//
-//    }
+   while (true) {
+       int v = -1;
+        for(int i = 0; i < nvertices; i++){
+            if(!used[i] && (v == -1 || distances[i] < distances[v])) {
+                v = i;
+            }
+    }
 
-//    if (...) {
+    if(v == -1)
+            break;
+        used[v] = true;
+        for(auto edge : edges_by_vertex[v]){
+            if(distances[edge.v] > distances[v] + edge.w){
+                distances[edge.v] = distances[v] + edge.w;
+                father[edge.v] = v;
+            }
+        }
+       if (distances[finish] != INF) {
+        std::vector<int> path;
+        int cur = finish;
+        while(cur != -1){
+            path.push_back(cur);
+            cur = father[cur];
+        }
 //        ...
-//        for (...) {
-//            std::cout << (path[i] + 1) << " ";
-//        }
-//        std::cout << std::endl;
-//    } else {
-//        std::cout << -1 << std::endl;
-//    }
+        for (int i = path.size()-1; i >= 0; i--) {
+            std::cout << (path[i] + 1) << " ";
+        }
+        std::cout << std::endl;
+    } else {
+        std::cout << -1 << std::endl;
+    }
 }
 
 int main() {
